@@ -1,0 +1,29 @@
+.btn:focus{
+    box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%) !important;
+}
+.btn-primary.focus, .btn-primary:focus{
+    box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%) !important;
+}
+.do-none {
+    height : 0px;
+    opacity : 0;
+    visibility : hidden;
+}
+.do-block {
+    height : auto;
+    opacity : 1;
+    visibility : visible;
+    transition-duration: 2s;
+}
+.toastMsg{
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: -1;
+}
+.toast.show{
+    z-index: 99;
+}
+.toast.hide{
+    z-index: -1;
+}

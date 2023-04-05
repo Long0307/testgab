@@ -8,7 +8,12 @@ use Encore\Admin\Form;
 use Encore\Admin\Grid;
 use Encore\Admin\Show;
 use App\Jobs\SynchronizeData;
+use App\Imports\ProductImport;
+use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Support\Facades\Config;
+use App\Admin\Extensions\Tools\ImportProduct;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use DB;
 
 class ProductController extends AdminController
@@ -28,7 +33,6 @@ class ProductController extends AdminController
     protected function grid()
     {
         $grid = new Grid(new products());
-
         $grid->column('id', __('Id'));
         $grid->column('name', __('Name'));
         $grid->column('quantity', __('Quantity'));
@@ -37,9 +41,16 @@ class ProductController extends AdminController
         $grid->column('description', __('Description'));
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
-
+        $grid->tools(function($tools) {
+            $tools->append(new ImportProduct());
+        });
         return $grid;
     }
+
+    // public function import() 
+    // {
+    //     Excel::import(new UsersImport, 'users.xlsx');
+    // }
 
     /**
      * Make a show builder.
@@ -89,5 +100,36 @@ class ProductController extends AdminController
         });
 
         return $form;
+    }
+
+    public function import(Request $request)
+    {
+        if ($request->hasFile('file')) {
+
+            $file = $request->file('file');
+            // $sheets = $request->get('sheets');
+            // $product_id = $request->get('product_id');
+            // $file->move('upload/file', $file->getClientOriginalName());
+            // $import = new ProductImport($product_id);
+            Excel::import(new ProductImport, $file->getClientOriginalName());
+            // Sai ở đây
+            // $import->onlySheets($sheets);
+            echo 5;
+            // $moveon = '/upload/file/'.$file->getClientOriginalName();
+            echo 0;
+            // Excel::import($import, public_path($moveon));
+            // echo 1;
+            // Log::info("Imported....");
+            // echo 2;
+            // return response()->json([
+            //     'success' => true,
+            //     'message' => 'Import successfull.'
+            // ]);
+        }else {
+            return response()->json([
+                'success' => false,
+                'message' => 'Import failed.'
+            ]);
+        }
     }
 }

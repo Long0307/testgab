@@ -13,5 +13,6 @@ Route::group([
 
     $router->get('/', 'HomeController@index')->name('home');
     $router->resource('products', ProductController::class);
+    $router->post('/import', 'ProductController@import')->name('import');
 
 });
