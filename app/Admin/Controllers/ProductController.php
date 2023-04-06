@@ -107,24 +107,17 @@ class ProductController extends AdminController
         if ($request->hasFile('file')) {
 
             $file = $request->file('file');
-            // $sheets = $request->get('sheets');
-            // $product_id = $request->get('product_id');
-            // $file->move('upload/file', $file->getClientOriginalName());
-            // $import = new ProductImport($product_id);
-            Excel::import(new ProductImport, $file->getClientOriginalName());
-            // Sai ở đây
-            // $import->onlySheets($sheets);
-            echo 5;
-            // $moveon = '/upload/file/'.$file->getClientOriginalName();
-            echo 0;
-            // Excel::import($import, public_path($moveon));
-            // echo 1;
-            // Log::info("Imported....");
-            // echo 2;
-            // return response()->json([
-            //     'success' => true,
-            //     'message' => 'Import successfull.'
-            // ]);
+            $sheets = $request->get('sheets');
+            $product_id = $request->get('product_id');
+            $file->move('upload/file', $file->getClientOriginalName());
+            $import = new ProductImport($product_id);
+            $import->onlySheets(['products']);
+            Excel::import($import, public_path('/upload/file/'.$file->getClientOriginalName()));
+            Log::info("Imported....");
+            return response()->json([
+                'success' => true,
+                'message' => 'Import successfull.'
+            ]);
         }else {
             return response()->json([
                 'success' => false,

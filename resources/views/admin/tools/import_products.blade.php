@@ -39,9 +39,9 @@
             <input type="file" name="fileupload" required="true" class="form-control-file" accept=".xlsx, .xlsm, .xls" id="importFile">
           </div>
           <div class="form-group">
-            <label for="inputWorker">product</label>
+            <label for="inputWorker">User:</label>
             <select class="form-control form-control-lg" id="inputWorker">
-                @foreach ($products as $product) <option value="{{ $product->id }}">{{ $product->name }}</option> @endforeach
+                @foreach ($users as $user) <option value="{{ $user->id }}">{{ $user->name }}</option> @endforeach
             </select>
           </div>
           <div class="form-group">
@@ -155,15 +155,16 @@
             document.getElementById("processingImport").style.display = "block";
             $('#importPackboxItemMapModal').modal('hide');
             var url = window.location.href; 
-            console.log(url);
+            // console.log(url);
             $.ajax({
-                type: "POST",
+                type: "post",
                 url: "import",
                 data: formData,
                 enctype: 'multipart/form-data',
                 processData: false,
                 contentType: false,
                 success: function(response, textStatus) {
+                  console.log("Th1");
                   console.log(response);
                     // if (response.success) {
                     //   toastr.success('Import data successfull.', 'Success!');
@@ -172,6 +173,7 @@
                     // }
                 },
                 error: function(XMLHttpRequest, textStatus, errorThrown) {
+                  console.log("Th2");
                     toastr.error('The import failed.', 'Error!');
                     console.log(XMLHttpRequest);
                     console.log("2"+textStatus);

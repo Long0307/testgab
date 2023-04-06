@@ -2,26 +2,34 @@
 
 namespace App\Imports;
 
-use Illuminate\Support\Collection;
-use App\Models\Products;
-use Maatwebsite\Excel\Concerns\ToCollection;
-
-class ProductImport implements ToCollection
+// use App\Models\products;
+use Maatwebsite\Excel\Concerns\WithMultipleSheets;
+use Maatwebsite\Excel\Concerns\SkipsUnknownSheets;
+use Maatwebsite\Excel\Concerns\WithConditionalSheets;
+use Maatwebsite\Excel\Concerns\WithProgressBar;
+use Maatwebsite\Excel\Concerns\Importable;
+// Đúng ra thằng này là import data
+class ProductImport implements WithMultipleSheets, SkipsUnknownSheets, WithProgressBar
 {
-    /**
-    * @param Collection $collection
-    */
-    public function collection(Collection $collection)
+    use WithConditionalSheets;
+    use Importable;
+    private $product_id;
+    public function __construct($product_id)
     {
-        foreach ($rows as $row) 
-        {
-            Products::create([
-                'name' => $row[0],
-                'quantity' => $row[0],
-                'price' => $row[0],
-                'producers' => $row[0],
-                'description' => $row[0],
-            ]);
-        }
+        $this->product_id = $product_id;
     }
+
+    public function conditionalSheets(): array
+    {
+        return [
+            'products' => new ImportProducts(),
+        ];
+    }
+    
+    public function onUnknownSheet($sheetName)
+    {
+        // E.g. you can log that a sheet was not found.
+        info("Sheet {$sheetName} was skipped");
+    }
+
 }
